@@ -1,4 +1,4 @@
-script: true
+script: make
 language: c
 compiler:
         - clang
