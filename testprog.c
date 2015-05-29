@@ -11,6 +11,7 @@
  * http://en.wikipedia.org/wiki/Park–Miller_random_number_generator
  */
 #define _BSD_SOURCE
+#include <assert.h>
 #include <stdio.h>
 #ifndef __APPLE__
 #include <stdio_ext.h>
@@ -24,6 +25,8 @@
 #include <getopt.h>
 
 #include "sys.h"
+
+#define	TMPBUF_LEN	1024
 
 typedef uint32_t	u32;
 typedef uint64_t	u64;
@@ -44,12 +47,23 @@ u64	g_test_print_mask = 0;
 int	g_debug = 0;
 
 /*
+ * I/O buffer which will immitate stdio's underlying (read: setvbuf())
+ * buffer.
+ */
+char	io_putc_buf[10*TMPBUF_LEN];
+int	io_putc_buf_idx = 0;
+
+/*
  * Sample I/O routine with no buffering for now.
  */
 void
 io_putc(int c)
 {
-	printf("%c", c);
+
+	io_putc_buf[io_putc_buf_idx] = c;
+	io_putc_buf_idx++;
+
+	assert(io_putc_buf_idx < sizeof(io_putc_buf));
 }
 
 /*
@@ -95,13 +109,14 @@ verif(int argc, char **argv)
 {
 	u32	seed;
 	u64	mask;
-	char	fmtstr[1000];
+	char	fmtstr[TMPBUF_LEN];
 	char	*cptr;
 	int	i, j;
 	u32	args[6];
 	int	(*f_printf)(char *, const char *fmt, ...);
 	int	(*f_pf)(const char *fmt, ...);
-	char	cmp_buf1[1000], cmp_buf2[1000], tmpbuf[1000], diffbuf[1000];
+	char	cmp_sys[TMPBUF_LEN], cmp_mini_pf[TMPBUF_LEN],
+			diffbuf[TMPBUF_LEN];
 
 	f_printf = sprintf;	// stay away from compiler warnings
 	f_pf = pf;
@@ -116,10 +131,10 @@ verif(int argc, char **argv)
 		g_test_print_mask = 0xffff;
 	}
 	for (mask = 0; ;mask++ ) {
-		if ((mask & g_test_print_mask) == 0) {
+//		if ((mask & g_test_print_mask) == 0) {
 			fprintf(stderr, "TEST 0x%016llx SEED 0x%08x\n", mask,
 				lcg_getset(0, 0));
-		}
+//		}
 
 		cptr = fmtstr;
 		u32 loop_num = lcg_rand() % 0x7;
@@ -167,47 +182,40 @@ verif(int argc, char **argv)
 			}
 			if (post_str_has) {
 				for (i = 0; i < post_str_len; i++) {
-					*cptr++ = 'a' + (lcg_rand() % 20);
+					*cptr = 'a' + (lcg_rand() % 20);
+					cptr++;
 				}
 			}
 		}
 
 		*cptr++ = 0;
 
-		/* C library printf() puts value to cmp_buf1 */
-		f_printf(cmp_buf1, fmtstr, args[0], args[1], args[2], args[3],
+		/* C library printf() puts value to cmp_sys */
+		f_printf(cmp_sys, fmtstr, args[0], args[1], args[2], args[3],
 			args[4], args[5]);
 
-		/* 
-		 * Now we test pf(). We make ugly
-		 * http://www.koszek.com/2012/05/19
-		 * hack to let us test printf. Better way would be to
-		 * abstract io_putc() into buffer operating function, but
-		 * this is good enough for now.
-		 */
-		fflush(stdout);
-		setbuf(stdout, tmpbuf);
+		/* Reset the test buffer */
+		memset(io_putc_buf, 0, sizeof(io_putc_buf));
+		io_putc_buf_idx = 0;
+
 		f_pf(fmtstr, args[0], args[1], args[2], args[3], args[4],
 			args[5]);
-		strcpy(cmp_buf2, tmpbuf);
-		fpurge(stdout);
-		fflush(stdout);
-		memset(tmpbuf, 0, sizeof(tmpbuf));
-	
-		if (strcmp(cmp_buf1, cmp_buf2) != 0) {
-			printf("=======\n");
+		strcpy(cmp_mini_pf, io_putc_buf);
+
+		if (strcmp(cmp_sys, cmp_mini_pf) != 0) {
+			printf("==== printf() != mini_printf() mismatch ====\n");
 			printf("fmtstr='%s'\n", fmtstr);
 			memset(diffbuf, '.', sizeof(diffbuf));
-			for (i = 0; i < strlen(cmp_buf1); i++) {
-				if (cmp_buf1[i] != cmp_buf2[i]) {
+			for (i = 0; i < strlen(cmp_sys); i++) {
+				if (cmp_sys[i] != cmp_mini_pf[i]) {
 					diffbuf[i] = '^';
 				}
 			}
 			diffbuf[i] = 0;
 
-			printf("P:%s\n", cmp_buf1);
-			printf("V:%s\n", cmp_buf2);
-			printf("d:%s\n", diffbuf);
+			printf(" SYS_PF:%s\n", cmp_sys);
+			printf("MINI_PF:%s\n", cmp_mini_pf);
+			printf("   diff:%s\n", diffbuf);
 			printf("=====\n");
 			printf("pf(\"%s\", %08x, %08x, %08x, %08x, %08x, %08x);\n",
 			    	fmtstr,
@@ -224,6 +232,8 @@ int
 main(int argc, char **argv)
 {
 	int	o, flag_v;
+
+	memset(io_putc_buf, 0, sizeof(io_putc_buf));
 
 	flag_v = 0;
 	while ((o = getopt(argc, argv, "dn:m:vw:")) != -1) {
