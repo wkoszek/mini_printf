@@ -63,9 +63,12 @@ io_putc(int c)
 	io_putc_buf[io_putc_buf_idx] = c;
 	io_putc_buf_idx++;
 
+#ifdef TESTPROG
 	assert(io_putc_buf_idx < sizeof(io_putc_buf));
+#endif
 }
 
+#ifdef TESTPROG
 /*
  * Delay between generating vectors
  */
@@ -277,3 +280,4 @@ main(int argc, char **argv)
 
 	return 0;
 }
+#endif
