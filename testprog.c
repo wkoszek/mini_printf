@@ -135,8 +135,8 @@ verif(int argc, char **argv)
 	}
 	for (mask = 0; ;mask++ ) {
 //		if ((mask & g_test_print_mask) == 0) {
-			fprintf(stderr, "TEST 0x%016llx SEED 0x%08x\n", mask,
-				lcg_getset(0, 0));
+			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
+			    (unsigned long)mask, lcg_getset(0, 0));
 //		}
 
 		cptr = fmtstr;
