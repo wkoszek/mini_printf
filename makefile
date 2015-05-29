@@ -1,9 +1,11 @@
-all: testprog shlib
+all: testprog mini_printf.so
 
-testprog:
+SRC= mini_printf.c testprog.c libc.c
+
+testprog: $(SRC)
 	$(CC) $(CFLAGS) -std=c99 -DTESTPROG -Wall -pedantic mini_printf.c testprog.c libc.c -o testprog
-shlib:
+mini_printf.so: $(SRC)
 	$(CC) $(CFLAGS) -std=c99 -fno-stack-protector -nostdlib -Wall -pedantic -o mini_printf.so -fPIC -fpic -shared mini_printf.c testprog.c libc.c
 clean:
-	rm -rf printf
+	rm -rf testprog
 	rm -rf mini_printf.so
