@@ -1,3 +1,4 @@
+script: true
 language: c
 compiler:
         - clang
