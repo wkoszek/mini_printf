@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wkoszek/mini_printf.svg)](https://travis-ci.org/wkoszek/mini_printf)
 
-Wojciech Adam Koszek ``wojciech@koszek''
+*Wojciech Adam Koszek* **wojciech@koszek**
 
 This is a minimal printf() implementation that doesn't depend on wny other
 libraries. The testprog.c has a randomized stress test suite proving my
