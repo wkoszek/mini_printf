@@ -26,7 +26,7 @@ printf() is fairly robust. Testprog can be run with options:
 
 ### Porting
 
-Library is self contained in ``mini_printf.c''. To make it work on your
+Library is self contained in mini_printf.c. To make it work on your
 system you can start by doing:
 
 	make
