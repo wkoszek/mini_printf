@@ -12,7 +12,9 @@
  */
 #define _BSD_SOURCE
 #include <stdio.h>
+#ifndef __APPLE__
 #include <stdio_ext.h>
+#endif
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
@@ -104,6 +106,7 @@ verif(int argc, char **argv)
 	f_printf = sprintf;	// stay away from compiler warnings
 	f_pf = pf;
 
+	seed = 13;
 	if (argc == 1) {
 		seed = strtol(argv[0], (char **) NULL, 16);
 		lcg_getset(seed, 1);
@@ -114,7 +117,7 @@ verif(int argc, char **argv)
 	}
 	for (mask = 0; ;mask++ ) {
 		if ((mask & g_test_print_mask) == 0) {
-			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n", mask,
+			fprintf(stderr, "TEST 0x%016llx SEED 0x%08x\n", mask,
 				lcg_getset(0, 0));
 		}
 
@@ -187,7 +190,7 @@ verif(int argc, char **argv)
 		f_pf(fmtstr, args[0], args[1], args[2], args[3], args[4],
 			args[5]);
 		strcpy(cmp_buf2, tmpbuf);
-		__fpurge(stdout);
+		fpurge(stdout);
 		fflush(stdout);
 		memset(tmpbuf, 0, sizeof(tmpbuf));
 	
