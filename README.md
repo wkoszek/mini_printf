@@ -1,4 +1,6 @@
-# mini_printf
+# mini_printf -- minimal self-contained printf()
+
+[![Build Status](https://travis-ci.org/wkoszek/mini_printf.svg)](https://travis-ci.org/wkoszek/mini_printf)
 
 Wojciech Adam Koszek ``wojciech@koszek''
 
