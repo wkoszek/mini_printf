@@ -18,7 +18,7 @@ test:
 unittest:
 	./testprog -d
 stresstest:
-	./testprog -v -m 4095 $$RANDOM
+	./testprog -v -s 1000000 -m 16383 $$RANDOM
 
 clean:
 	rm -rf testprog
