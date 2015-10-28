@@ -36,7 +36,8 @@ int	g_knob_no_minus = 1;
 
 /* Settings */
 u64	g_test_print_mask = 0;	
-int	g_loops = 6;
+int	g_loops = 7;
+int	g_print = 0;
 
 /* Debugging */
 int	g_debug = 0;
@@ -115,8 +116,8 @@ verif(int argc, char **argv)
 			diffbuf[TMPBUF_LEN];
 
 	printf("  verif() is starting..\n");
-	printf("  g_test_print_mask=%llx, g_delay=%d, g_debug=%d\n",
-	    	g_test_print_mask, g_delay, g_debug);
+	printf("  g_test_print_mask=%llx, g_delay=%d, g_debug=%d g_print=%d\n",
+			g_test_print_mask, g_delay, g_debug, g_print);
 
 	f_printf = sprintf;	// stay away from compiler warnings
 	f_pf = pf;
@@ -206,6 +207,10 @@ verif(int argc, char **argv)
 			args[5]);
 		strcpy(cmp_mini_pf, io_putc_buf);
 
+		if (g_print > 0) {
+			fprintf(stderr, "     SYS : '%s'\n", cmp_sys);
+			fprintf(stderr, "     PF : '%s'\n", cmp_mini_pf);
+		}
 		if (strcmp(cmp_sys, cmp_mini_pf) != 0) {
 			printf("==== printf() != mini_printf() mismatch ====\n");
 			printf("fmtstr='%s'\n", fmtstr);
@@ -259,10 +264,10 @@ main(int argc, char **argv)
 	}
 
 	flag_v = flag_debug = arg_mask = arg_delay = arg_loops = test_num = 0;
-	while ((o = getopt(argc, argv, "dn:m:vw:l:t:")) != -1) {
+	while ((o = getopt(argc, argv, "dn:m:vw:l:t:p")) != -1) {
 		switch (o) {
 		case 'd':
-			flag_debug = 1;
+			flag_debug++;
 			break;
 		case 'l':
 			arg_loops = atoi(optarg);
@@ -275,6 +280,9 @@ main(int argc, char **argv)
 			break;
 		case 'w':
 			arg_delay = atoi(optarg);
+			break;
+		case 'p':
+			g_print++;
 			break;
 		case 'v':
 			flag_v = 1;
@@ -311,6 +319,7 @@ main(int argc, char **argv)
 		if (test_num == 0 || test_num == 9) pf("len2 == '%012x'\n", 0x123);
 		if (test_num == 0 || test_num == 10) pf("%7d\n", 123);
 		if (test_num == 0 || test_num == 11) pf("%k%k", 1, 1);
+		if (test_num == 0 || test_num == 12) pf("woj%6Wtek", 1);
 		printf("buf='%s'\n", io_putc_buf);
 	} else {
 		printf("Verifying mini_printf.c\n");
