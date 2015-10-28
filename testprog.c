@@ -282,7 +282,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (!flag_v && ((flag_debug + arg_mask + arg_delay + arg_loops) > 0)) {
+	if (!flag_v && ((arg_mask + arg_delay + arg_loops) > 0)) {
 		fprintf(stderr, "-d/-m/-w only make sense with -v\n");
 		exit(1);
 	}
