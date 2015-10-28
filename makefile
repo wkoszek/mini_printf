@@ -2,10 +2,13 @@ all: testprog mini_printf.so
 
 SRC= mini_printf.c testprog.c libc.c
 
+CFLAGS+= -Wall -pedantic -std=c99
+LIBFLAGS+= -fno-stack-protector -fPIC -fpic
+
 testprog: $(SRC) sys.h
-	$(CC) $(CFLAGS) -std=c99 -DTESTPROG -Wall -pedantic mini_printf.c testprog.c libc.c -o testprog
+	$(CC) $(CFLAGS) -DTESTPROG $(SRCS) -o testprog
 mini_printf.so: $(SRC) sys.h
-	$(CC) $(CFLAGS) -std=c99 -fno-stack-protector -nostdlib -Wall -pedantic -o mini_printf.so -fPIC -fpic -shared mini_printf.c testprog.c libc.c
+	$(CC) $(CFLAGS) $(LIBFLAGS) -nostdlib -o mini_printf.so -shared $(SRCS)
 analyze:
 	scan-build -o /tmp/_.mini_printf make -j4
 
