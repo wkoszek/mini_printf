@@ -36,6 +36,7 @@ int	g_knob_no_minus = 1;
 
 /* Settings */
 u64	g_test_print_mask = 0;	
+int	g_loops = 6;
 
 /* Debugging */
 int	g_debug = 0;
@@ -135,6 +136,9 @@ verif(int argc, char **argv)
 
 		cptr = fmtstr;
 		u32 loop_num = lcg_rand() % 0x7;
+		if (loop_num > g_loops) {
+			loop_num = g_loops;
+		}
 		for (j = 0; j < loop_num; j++) {
 			u32 pre_str_has = lcg_rand() & 1;
 			u32 pre_str_len = lcg_rand() & 0xf;
@@ -234,6 +238,8 @@ usage(const char *progname)
 	fprintf(stderr, "%s usage:\n", progname);
 	fprintf(stderr, "-d         increase debug level\n");
 	fprintf(stderr, "-m <mask>  test print mask\n");
+	fprintf(stderr, "-l <num>   loops for format creation "
+	    "(lower=shorter format string\n");
 	fprintf(stderr, "-w <secs>  delay test execution by <secs> seconds\n");
 	fprintf(stderr, "-v         start verification\n");
 }
@@ -241,7 +247,7 @@ usage(const char *progname)
 int
 main(int argc, char **argv)
 {
-	int	o, flag_v, flag_debug, arg_mask, arg_delay;
+	int	o, flag_v, flag_debug, arg_mask, arg_delay, arg_loops;
 
 	memset(io_putc_buf, 0, sizeof(io_putc_buf));
 
@@ -250,11 +256,14 @@ main(int argc, char **argv)
 		exit(64);
 	}
 
-	flag_v = flag_debug = arg_mask = arg_delay = 0;
-	while ((o = getopt(argc, argv, "dn:m:vw:")) != -1) {
+	flag_v = flag_debug = arg_mask = arg_delay = arg_loops = 0;
+	while ((o = getopt(argc, argv, "dn:m:vw:l:")) != -1) {
 		switch (o) {
 		case 'd':
 			flag_debug = 1;
+			break;
+		case 'l':
+			arg_loops = atoi(optarg);
 			break;
 		case 'm':
 			arg_mask = atoi(optarg);
@@ -273,7 +282,7 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (!flag_v && ((flag_debug + arg_mask + arg_delay) > 0)) {
+	if (!flag_v && ((flag_debug + arg_mask + arg_delay + arg_loops) > 0)) {
 		fprintf(stderr, "-d/-m/-w only make sense with -v\n");
 		exit(1);
 	}
@@ -281,6 +290,9 @@ main(int argc, char **argv)
 	g_debug = flag_debug;
 	g_test_print_mask = arg_mask;
 	g_delay = arg_delay;
+	if (arg_loops) {
+		g_loops = arg_loops;
+	}
 
 	if (!flag_v) {
 		if (1) pf("wojtek\n");
