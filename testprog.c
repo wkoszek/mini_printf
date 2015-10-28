@@ -310,6 +310,8 @@ main(int argc, char **argv)
 		if (test_num == 0 || test_num == 8) pf("len8 == '%08x'\n", 0x0);
 		if (test_num == 0 || test_num == 9) pf("len2 == '%012x'\n", 0x123);
 		if (test_num == 0 || test_num == 10) pf("%7d\n", 123);
+		if (test_num == 0 || test_num == 11) pf("%k%k", 1, 1);
+		printf("buf='%s'\n", io_putc_buf);
 	} else {
 		printf("Verifying mini_printf.c\n");
 		verif(argc, argv);
