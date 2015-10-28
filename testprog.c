@@ -135,15 +135,17 @@ verif(int argc, char **argv)
 		cptr = fmtstr;
 		u32 loop_num = lcg_rand() % 0x7;
 		for (j = 0; j < loop_num; j++) {
-			u32 has_hex = lcg_rand() & 1;
-			u32 has_pad = lcg_rand() & 1;
-			u32 pad_len = lcg_rand() & 0x7;
-			u32 is_correct = lcg_rand() & 1;
 			u32 pre_str_has = lcg_rand() & 1;
 			u32 pre_str_len = lcg_rand() & 0xf;
+			u32 is_correct = lcg_rand() & 1;
+			u32 has_pad = lcg_rand() & 1;
+			u32 pad_len = lcg_rand() & 0x7;
+			u32 has_hex = lcg_rand() & 1;
+			u32 has_d = lcg_rand() & 0xff;
 			u32 post_str_has = lcg_rand() & 1;
 			u32 post_str_len = lcg_rand() & 0xf;
-			u32 has_d = lcg_rand() & 0xff;
+
+			/* Fill the arguments array so we can use it later */
 			for (i = 0; i < 6; i++) {
 				args[i] = lcg_rand();
 				if (g_knob_no_minus) {
@@ -176,6 +178,7 @@ verif(int argc, char **argv)
 				 */
 				*cptr++ = 'W';
 			}
+
 			if (post_str_has) {
 				for (i = 0; i < post_str_len; i++) {
 					*cptr = 'a' + (lcg_rand() % 20);
