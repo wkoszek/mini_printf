@@ -38,6 +38,7 @@ int	g_knob_no_minus = 1;
 u64	g_test_print_mask = 0;	
 int	g_loops = 7;
 int	g_print = 0;
+u32	g_stop_after_test = -1;
 
 /* Debugging */
 int	g_debug = 0;
@@ -104,8 +105,7 @@ lcg_rand(void)
 void
 verif(int argc, char **argv)
 {
-	u32	seed;
-	u64	mask;
+	u32	seed, test_num;
 	char	fmtstr[TMPBUF_LEN];
 	char	*cptr;
 	int	i, j;
@@ -128,11 +128,17 @@ verif(int argc, char **argv)
 		lcg_getset(seed, 1);
 	}
 	printf("  seed=%#08x, argv[0]=%s\n", seed, argv[0]);
-	for (mask = 0; ;mask++ ) {
-		if ((mask & g_test_print_mask) == g_test_print_mask ||
+	for (test_num = 0; ;test_num++) {
+		if ((test_num & g_test_print_mask) == g_test_print_mask ||
 				(argc == 1)) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
-			    (unsigned long)mask, lcg_getset(0, 0));
+			    (unsigned long)test_num, lcg_getset(0, 0));
+		}
+		if ((g_stop_after_test != -1) &&
+					(test_num >= g_stop_after_test)) {
+			fprintf(stderr, "  Requested stop after %d tests\n"
+			    "Terminating!\n", g_stop_after_test);
+			break;
 		}
 
 		cptr = fmtstr;
@@ -264,7 +270,7 @@ main(int argc, char **argv)
 	}
 
 	flag_v = flag_debug = arg_mask = arg_delay = arg_loops = test_num = 0;
-	while ((o = getopt(argc, argv, "dn:m:vw:l:t:p")) != -1) {
+	while ((o = getopt(argc, argv, "dn:m:vw:l:t:ps:")) != -1) {
 		switch (o) {
 		case 'd':
 			flag_debug++;
@@ -283,6 +289,9 @@ main(int argc, char **argv)
 			break;
 		case 'p':
 			g_print++;
+			break;
+		case 's':
+			g_stop_after_test = atoi(optarg);
 			break;
 		case 'v':
 			flag_v = 1;
