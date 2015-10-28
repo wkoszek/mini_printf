@@ -1,6 +1,6 @@
 all: testprog mini_printf.so
 
-SRC= mini_printf.c testprog.c libc.c
+SRC= mini_printf.c testprog.c
 
 CFLAGS+= -Wall -pedantic -std=c99
 LIBFLAGS+= -fno-stack-protector -fPIC -fpic

@@ -38,7 +38,9 @@ vpf_num_to_str(u32 a, int is_hex, int pad_len, int pad_char)
 	u32	base;
 	int	bufidx, i;
 
-	mem_set(buf, pad_char, sizeof(buf));
+	for (i = 0; i < sizeof(buf); i++) {
+		buf[i] = pad_char;
+	}
 	base = 10;
 	if (is_hex) {
 		base = 16;
