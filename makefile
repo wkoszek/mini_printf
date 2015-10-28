@@ -17,6 +17,8 @@ test:
 	./testprog -m 4095 -v
 unittest:
 	./testprog -d
+stresstest:
+	./testprog -v -m 4095 $$RANDOM
 
 clean:
 	rm -rf testprog
