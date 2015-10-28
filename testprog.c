@@ -240,6 +240,7 @@ usage(const char *progname)
 	fprintf(stderr, "-m <mask>  test print mask\n");
 	fprintf(stderr, "-l <num>   loops for format creation "
 	    "(lower=shorter format string\n");
+	fprintf(stderr, "-t <num>   run just <num> unit test\n");
 	fprintf(stderr, "-w <secs>  delay test execution by <secs> seconds\n");
 	fprintf(stderr, "-v         start verification\n");
 }
@@ -248,6 +249,7 @@ int
 main(int argc, char **argv)
 {
 	int	o, flag_v, flag_debug, arg_mask, arg_delay, arg_loops;
+	int	test_num;
 
 	memset(io_putc_buf, 0, sizeof(io_putc_buf));
 
@@ -256,8 +258,8 @@ main(int argc, char **argv)
 		exit(64);
 	}
 
-	flag_v = flag_debug = arg_mask = arg_delay = arg_loops = 0;
-	while ((o = getopt(argc, argv, "dn:m:vw:l:")) != -1) {
+	flag_v = flag_debug = arg_mask = arg_delay = arg_loops = test_num = 0;
+	while ((o = getopt(argc, argv, "dn:m:vw:l:t:")) != -1) {
 		switch (o) {
 		case 'd':
 			flag_debug = 1;
@@ -267,6 +269,9 @@ main(int argc, char **argv)
 			break;
 		case 'm':
 			arg_mask = atoi(optarg);
+			break;
+		case 't':
+			test_num = atoi(optarg);
 			break;
 		case 'w':
 			arg_delay = atoi(optarg);
@@ -295,16 +300,16 @@ main(int argc, char **argv)
 	}
 
 	if (!flag_v) {
-		if (1) pf("wojtek\n");
-		if (1) pf("wojtek'\n");
-		if (1) pf("zero '%d'\n", 0);
-		if (1) pf("wojtek %d'\n", 123);
-		if (1) pf("'wojtek %d %d'\n", 123, 789);
-		if (1) pf("'wojtek %x %x'\n", 123, 789);
-		if (1) pf("len8 == '%08x'\n", 0x123);
-		if (1) pf("len8 == '%08x'\n", 0x0);
-		if (1) pf("len2 == '%012x'\n", 0x123);
-		if (1) pf("%7d\n", 123);
+		if (test_num == 0 || test_num == 1) pf("wojtek\n");
+		if (test_num == 0 || test_num == 2) pf("wojtek'\n");
+		if (test_num == 0 || test_num == 3) pf("zero '%d'\n", 0);
+		if (test_num == 0 || test_num == 4) pf("wojtek %d'\n", 123);
+		if (test_num == 0 || test_num == 5) pf("'wojtek %d %d'\n", 123, 789);
+		if (test_num == 0 || test_num == 6) pf("'wojtek %x %x'\n", 123, 789);
+		if (test_num == 0 || test_num == 7) pf("len8 == '%08x'\n", 0x123);
+		if (test_num == 0 || test_num == 8) pf("len8 == '%08x'\n", 0x0);
+		if (test_num == 0 || test_num == 9) pf("len2 == '%012x'\n", 0x123);
+		if (test_num == 0 || test_num == 10) pf("%7d\n", 123);
 	} else {
 		printf("Verifying mini_printf.c\n");
 		verif(argc, argv);
