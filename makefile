@@ -5,10 +5,15 @@ SRC= mini_printf.c testprog.c libc.c
 CFLAGS+= -Wall -pedantic -std=c99
 LIBFLAGS+= -fno-stack-protector -fPIC -fpic
 
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Darwin)
+CFLAGS+=-DMACOSX_PRINTF
+endif
+
 testprog: $(SRC) sys.h
-	$(CC) $(CFLAGS) -DTESTPROG $(SRCS) -o testprog
+	$(CC) $(CFLAGS) -DTESTPROG $(SRC) -o testprog
 mini_printf.so: $(SRC) sys.h
-	$(CC) $(CFLAGS) $(LIBFLAGS) -nostdlib -o mini_printf.so -shared $(SRCS)
+	$(CC) $(CFLAGS) $(LIBFLAGS) -nostdlib -o mini_printf.so -shared $(SRC)
 analyze:
 	scan-build -o /tmp/_.mini_printf make -j4
 
