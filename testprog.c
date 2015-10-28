@@ -129,8 +129,7 @@ verif(int argc, char **argv)
 	}
 	printf("  seed=%#08x, argv[0]=%s\n", seed, argv[0]);
 	for (test_num = 0; ;test_num++) {
-		if ((test_num & g_test_print_mask) == g_test_print_mask ||
-				(argc == 1)) {
+		if ((test_num & g_test_print_mask) == g_test_print_mask) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
 			    (unsigned long)test_num, lcg_getset(0, 0));
 		}
