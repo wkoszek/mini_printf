@@ -134,10 +134,10 @@ verif(int argc, char **argv)
 		g_test_print_mask = 0xffff;
 	}
 	for (mask = 0; ;mask++ ) {
-//		if ((mask & g_test_print_mask) == 0) {
+		if ((mask & g_test_print_mask) == (g_test_print_mask - 1)) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
 			    (unsigned long)mask, lcg_getset(0, 0));
-//		}
+		}
 
 		cptr = fmtstr;
 		u32 loop_num = lcg_rand() % 0x7;
