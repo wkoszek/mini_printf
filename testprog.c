@@ -121,6 +121,10 @@ verif(int argc, char **argv)
 	char	cmp_sys[TMPBUF_LEN], cmp_mini_pf[TMPBUF_LEN],
 			diffbuf[TMPBUF_LEN];
 
+	printf("  verif() is starting..\n");
+	printf("  g_test_print_mask=%llx, g_delay=%d, g_debug=%d\n",
+	    	g_test_print_mask, g_delay, g_debug);
+
 	f_printf = sprintf;	// stay away from compiler warnings
 	f_pf = pf;
 
@@ -130,11 +134,8 @@ verif(int argc, char **argv)
 		lcg_getset(seed, 1);
 	}
 	printf("seed=%#08x, argv[0]=%s\n", seed, argv[0]);
-	if (g_test_print_mask == 0) {
-		g_test_print_mask = 0xffff;
-	}
 	for (mask = 0; ;mask++ ) {
-		if ((mask & g_test_print_mask) == (g_test_print_mask - 1)) {
+		if ((mask & g_test_print_mask) == g_test_print_mask) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
 			    (unsigned long)mask, lcg_getset(0, 0));
 		}
@@ -244,7 +245,7 @@ usage(const char *progname)
 int
 main(int argc, char **argv)
 {
-	int	o, flag_v;
+	int	o, flag_v, flag_debug, arg_mask, arg_delay;
 
 	memset(io_putc_buf, 0, sizeof(io_putc_buf));
 
@@ -253,17 +254,17 @@ main(int argc, char **argv)
 		exit(64);
 	}
 
-	flag_v = 0;
+	flag_v = flag_debug = arg_mask = arg_delay = 0;
 	while ((o = getopt(argc, argv, "dn:m:vw:")) != -1) {
 		switch (o) {
 		case 'd':
-			g_debug = 1;
+			flag_debug = 1;
 			break;
 		case 'm':
-			g_test_print_mask = atoi(optarg);
+			arg_mask = atoi(optarg);
 			break;
 		case 'w':
-			g_delay = atoi(optarg);
+			arg_delay = atoi(optarg);
 			break;
 		case 'v':
 			flag_v = 1;
@@ -276,10 +277,14 @@ main(int argc, char **argv)
 	argc -= optind;
 	argv += optind;
 
-	if (!flag_v && g_debug) {
-		fprintf(stderr, "-d only makes sense with -v\n");
+	if (!flag_v && ((flag_debug + arg_mask + arg_delay) > 0)) {
+		fprintf(stderr, "-d/-m/-w only make sense with -v\n");
 		exit(1);
 	}
+
+	g_debug = flag_debug;
+	g_test_print_mask = arg_mask;
+	g_delay = arg_delay;
 
 	if (1) pf("wojtek\n");
 	if (1) pf("wojtek'\n");
