@@ -127,7 +127,8 @@ verif(int argc, char **argv)
 	}
 	printf("  seed=%#08x, argv[0]=%s\n", seed, argv[0]);
 	for (mask = 0; ;mask++ ) {
-		if ((mask & g_test_print_mask) == g_test_print_mask) {
+		if ((mask & g_test_print_mask) == g_test_print_mask ||
+				(argc == 1)) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",
 			    (unsigned long)mask, lcg_getset(0, 0));
 		}
@@ -281,23 +282,21 @@ main(int argc, char **argv)
 	g_test_print_mask = arg_mask;
 	g_delay = arg_delay;
 
-	if (1) pf("wojtek\n");
-	if (1) pf("wojtek'\n");
-	if (1) pf("zero '%d'\n", 0);
-	if (1) pf("wojtek %d'\n", 123);
-	if (1) pf("'wojtek %d %d'\n", 123, 789);
-	if (1) pf("'wojtek %x %x'\n", 123, 789);
-	if (1) pf("len8 == '%08x'\n", 0x123);
-	if (1) pf("len8 == '%08x'\n", 0x0);
-	if (1) pf("len2 == '%012x'\n", 0x123);
-	if (1) pf("%7d\n", 123);
-
 	if (!flag_v) {
-		exit(1);
+		if (1) pf("wojtek\n");
+		if (1) pf("wojtek'\n");
+		if (1) pf("zero '%d'\n", 0);
+		if (1) pf("wojtek %d'\n", 123);
+		if (1) pf("'wojtek %d %d'\n", 123, 789);
+		if (1) pf("'wojtek %x %x'\n", 123, 789);
+		if (1) pf("len8 == '%08x'\n", 0x123);
+		if (1) pf("len8 == '%08x'\n", 0x0);
+		if (1) pf("len2 == '%012x'\n", 0x123);
+		if (1) pf("%7d\n", 123);
+	} else {
+		printf("Verifying mini_printf.c\n");
+		verif(argc, argv);
 	}
-	printf("Verifying mini_printf.c\n");
-	verif(argc, argv);
-
 	return 0;
 }
 #endif
