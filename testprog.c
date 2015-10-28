@@ -133,7 +133,7 @@ verif(int argc, char **argv)
 		seed = strtol(argv[0], (char **) NULL, 16);
 		lcg_getset(seed, 1);
 	}
-	printf("seed=%#08x, argv[0]=%s\n", seed, argv[0]);
+	printf("  seed=%#08x, argv[0]=%s\n", seed, argv[0]);
 	for (mask = 0; ;mask++ ) {
 		if ((mask & g_test_print_mask) == g_test_print_mask) {
 			fprintf(stderr, "TEST 0x%016lx SEED 0x%08x\n",

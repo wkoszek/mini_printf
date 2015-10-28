@@ -9,6 +9,13 @@ mini_printf.so: $(SRC)
 analyze:
 	scan-build -o /tmp/_.mini_printf make -j4
 
+test.very-verbose:
+	./testprog -m 0 -v
+test.verbose:
+	./testprog -m 15 -v
+test:
+	./testprog -m 4095 -v
+
 clean:
 	rm -rf testprog
 	rm -rf mini_printf.so
