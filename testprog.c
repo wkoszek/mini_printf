@@ -231,12 +231,27 @@ verif(int argc, char **argv)
 	}
 }
 
+static void
+usage(const char *progname)
+{
+	fprintf(stderr, "%s usage:\n", progname);
+	fprintf(stderr, "-d         increase debug level\n");
+	fprintf(stderr, "-m <mask>  test print mask\n");
+	fprintf(stderr, "-w <secs>  delay test execution by <secs> seconds\n");
+	fprintf(stderr, "-v         start verification\n");
+}
+
 int
 main(int argc, char **argv)
 {
 	int	o, flag_v;
 
 	memset(io_putc_buf, 0, sizeof(io_putc_buf));
+
+	if (argc == 1) {
+		usage(argv[0]);
+		exit(64);
+	}
 
 	flag_v = 0;
 	while ((o = getopt(argc, argv, "dn:m:vw:")) != -1) {
@@ -260,6 +275,11 @@ main(int argc, char **argv)
 
 	argc -= optind;
 	argv += optind;
+
+	if (!flag_v && g_debug) {
+		fprintf(stderr, "-d only makes sense with -v\n");
+		exit(1);
+	}
 
 	if (1) pf("wojtek\n");
 	if (1) pf("wojtek'\n");
