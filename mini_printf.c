@@ -104,9 +104,8 @@ vpf(const char *fmtstr, va_list va)
 				pad_len);
 			vpf_num_to_str(va_int, fmt == 'x', pad_len, pad_char);
 		} else {
-			for (i = 0; i < (cptr - prefmtptr); i++) {
-				dprintf(stderr, "C=%c\n", prefmtptr[i]);
-				io_putc(prefmtptr[i]);
+			for (i = 0; i < pad_len - 1; i++) {
+				io_putc(pad_char);
 			}
 			io_putc(fmt != 0 ? fmt : c);
 		}
