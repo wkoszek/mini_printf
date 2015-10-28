@@ -15,6 +15,8 @@ test.v:
 	./testprog -m 15 -v
 test:
 	./testprog -m 4095 -v
+unittest:
+	./testprog -d
 
 clean:
 	rm -rf testprog
