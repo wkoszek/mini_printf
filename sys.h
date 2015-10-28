@@ -1,10 +1,10 @@
 #include <stdarg.h>
 
-#ifdef TEST_PROG
+#ifdef TESTPROG
 #include <stdio.h>
 #endif
 
-#ifdef TEST_PROG
+#ifdef TESTPROG
 extern	int	g_debug;
 #define dprintf if (g_debug) fprintf
 #else
