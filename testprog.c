@@ -31,19 +31,13 @@
 typedef uint32_t	u32;
 typedef uint64_t	u64;
 
-/*
- * Knobs
- */
+/* Knobs */
 int	g_knob_no_minus = 1;
 
-/*
- * Settings
- */
+/* Settings */
 u64	g_test_print_mask = 0;	
 
-/*
- * Debugging
- */
+/* Debugging */
 int	g_debug = 0;
 
 /*
@@ -53,9 +47,7 @@ int	g_debug = 0;
 char	io_putc_buf[10*TMPBUF_LEN];
 int	io_putc_buf_idx = 0;
 
-/*
- * Sample I/O routine with no buffering for now.
- */
+/* Sample I/O routine with no buffering for now. */
 void
 io_putc(int c)
 {
@@ -143,7 +135,7 @@ verif(int argc, char **argv)
 		cptr = fmtstr;
 		u32 loop_num = lcg_rand() % 0x7;
 		for (j = 0; j < loop_num; j++) {
-			u32 has_h = lcg_rand() & 1;
+			u32 has_hex = lcg_rand() & 1;
 			u32 has_pad = lcg_rand() & 1;
 			u32 pad_len = lcg_rand() & 0x7;
 			u32 is_correct = lcg_rand() & 1;
@@ -170,13 +162,13 @@ verif(int argc, char **argv)
 			if (has_pad) {
 				*cptr++ = "123456789"[pad_len];
 			}
-			if (has_h) {
+			if (has_hex) {
 				*cptr++ = 'x';
 			}
 			if (has_d) {
 				*cptr++ = 'd';
 			}
-			if (!has_h || has_d) {
+			if (!has_hex || has_d) {
 				/*
 				 * make sure we don't insert sprintf()
 				 * valid format, which isn't supported by
