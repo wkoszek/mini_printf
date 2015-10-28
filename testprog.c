@@ -117,7 +117,7 @@ verif(int argc, char **argv)
 
 	printf("  verif() is starting..\n");
 	printf("  g_test_print_mask=%llx, g_delay=%d, g_debug=%d g_print=%d\n",
-			g_test_print_mask, g_delay, g_debug, g_print);
+			(long long)g_test_print_mask, g_delay, g_debug, g_print);
 
 	f_printf = sprintf;	// stay away from compiler warnings
 	f_pf = pf;
