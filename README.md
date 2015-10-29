@@ -82,3 +82,8 @@ short (`-l 1`), output must be slow (`-w 500000`) and verbose (`-d -v -p`), and
 every generated test must be printed out (`-m 0`):
 
 	./testprog -w 500000 -l 1 -d -v -m 0 -p
+
+# Author
+
+- Wojciech Adam Koszek, [wojciech@koszek.com](mailto:wojciech@koszek.com)
+- [http://www.koszek.com](http://www.koszek.com)
