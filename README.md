@@ -1,5 +1,5 @@
 # mini_printf
-### minimal, self-contained and verified printf()
+## minimal, self-contained and verified printf()
 
 [![Build Status](https://travis-ci.org/wkoszek/mini_printf.svg)](https://travis-ci.org/wkoszek/mini_printf)
 
