@@ -25,7 +25,7 @@ vpf_str_to_num(const char *fmtstr, int *resnum)
 		res += digit;
 	}
 	*resnum = res;
-	return (cptr - fmtstr);
+	return ((int)(cptr - fmtstr));
 }
 
 /*
