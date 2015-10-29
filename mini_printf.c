@@ -79,6 +79,7 @@ vpf(const char *fmtstr, va_list va)
 	const char *cptr, *prefmtptr;
 	int	fmt, c, va_int, pad_len, pad_char, i;
 
+	pad_char = ' ';
 	for (cptr = fmtstr; *cptr != '\0'; cptr++) {
 		fmt = 0;
 		pad_len = 0;
@@ -89,12 +90,6 @@ vpf(const char *fmtstr, va_list va)
 			cptr++;
 			if (*cptr >= '0' && *cptr <= '9') {
 				dprintf(stderr, "PAD *cptr = %c\n", *cptr);
-				if (pad_char == '0') {
-					cptr++;
-					pad_char = '0';
-				} else {
-					pad_char = ' ';
-				}
 				cptr += vpf_str_to_num(cptr, &pad_len);
 			}
 			fmt = *cptr;
