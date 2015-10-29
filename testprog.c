@@ -36,7 +36,7 @@ int	g_knob_no_minus = 1;
 
 /* Settings */
 u64	g_test_print_mask = 0;	
-int	g_loops = 7;
+int	g_loops = 6;
 int	g_print = 0;
 u32	g_stop_after_test = -1;
 
@@ -141,7 +141,7 @@ verif(int argc, char **argv)
 		}
 
 		cptr = fmtstr;
-		u32 loop_num = lcg_rand() % 0x7;
+		u32 loop_num = 1 + (lcg_rand() % 0x7);
 		if (loop_num > g_loops) {
 			loop_num = g_loops;
 		}
