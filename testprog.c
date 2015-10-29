@@ -97,7 +97,7 @@ lcg_rand(void)
 		val = lcg_getset(0, is_set=0);
 	}
 	ret64 = ((uint64_t)val * 279470273UL) % 4294967291UL;
-	ret32 = ret64;
+	ret32 = (u32)ret64;
 	(void)lcg_getset(ret32, is_set=1);
 	return ret32;
 }
@@ -124,7 +124,7 @@ verif(int argc, char **argv)
 
 	seed = 13;
 	if (argc == 1) {
-		seed = strtol(argv[0], (char **) NULL, 16);
+		seed = (u32)strtol(argv[0], (char **) NULL, 16);
 		lcg_getset(seed, 1);
 	}
 	printf("  seed=%#08x, argv[0]=%s\n", seed, argv[0]);
