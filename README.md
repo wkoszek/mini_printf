@@ -1,4 +1,5 @@
-# mini_printf - minimal, self-contained and tested printf()
+# mini_printf
+### minimal, self-contained and verified printf()
 
 [![Build Status](https://travis-ci.org/wkoszek/mini_printf.svg)](https://travis-ci.org/wkoszek/mini_printf)
 
@@ -55,8 +56,8 @@ Several other useful targets are:
 
 Underlying program for all tests is `testprog`. Its usage:
 
-Flag | Description
-=====+============
+Flag    | Description
+:-------|:-------------------------------------------------
 d       | turn debugging on. Can be specified more than once
 l <num> | how many loops to run. 1 loop = 1 chunk of format string. Default: 6.
 m       | print mask: frequency of printouts after each test execution
